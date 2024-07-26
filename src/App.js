@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet } from "react-native"
 import params from "./params";
 import Field from "./components/Field";
+import { createMinedBoard } from "./functions";
+import MineField from "./components/MineField";
 
 export default props => {
+    const cols = params.getColumnsAmount();
+    const rows = params.getRowsAmount();
+    const minesAmount =  Math.ceil(cols * rows * params.difficultLevel);
+    const [board, setBoard] = useState(createMinedBoard(rows, cols, minesAmount));
 
     return(
         <View style={styles.container}>
@@ -11,16 +17,9 @@ export default props => {
             <Text>Tamanho da grande:
                 {params.getRowsAmount()} X {params.getColumnsAmount()}
             </Text>
-            <Field />
-            <Field opened/>
-            <Field opened nearMines={1}/>
-            <Field opened nearMines={2}/>
-            <Field opened nearMines={5}/>
-            <Field opened nearMines={6}/>
-            <Field mined opened/>
-            <Field mined opened exploded/>
-            <Field flagged/>
-            <Field flagged opened/>
+            <View style={styles.board}>
+                <MineField board={board}/>
+            </View>
         </View>
     )
 }
@@ -28,8 +27,11 @@ export default props => {
 
 const styles = StyleSheet.create({
     container:{
-        justifyContent: 'center',
-        alignItems: "center",
-        flex: 1
+        flex:1,
+        justifyContent: 'flex-end'
+    },
+    board:{
+        alignItems: 'center',
+        backgroundColor: "#AAA"
     }
 })
